@@ -1,6 +1,6 @@
-namespace InvoiceService.Contracts;
+namespace Contracts.RaiseInvoiceCommand.V1;
 
-public record RaiseInvoiceCommand
+public record RaiseInvoiceCommandV1
 {
     public string DebtorId { get; set; }
     public decimal Value { get; set; }
