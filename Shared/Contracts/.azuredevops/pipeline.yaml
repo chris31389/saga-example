@@ -1,0 +1,46 @@
+trigger:
+  - main
+
+pool:
+  vmImage: "windows-latest"
+
+variables:
+  buildConfiguration: "Release"
+  nugetVersion: "5.x"
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: "sdk"
+      version: "8.x"
+
+  - task: NuGetToolInstaller@1
+    inputs:
+      versionSpec: $(nugetVersion)
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "restore"
+      projects: "**/*.csproj"
+      feedsToUse: "config"
+      nugetConfigPath: "NuGet.config"
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "build"
+      projects: "**/*.csproj"
+      arguments: "--configuration $(buildConfiguration)"
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "pack"
+      arguments: "--no-restore"
+      packagesToPack: "**/*.csproj"
+      nobuild: true
+      versioningScheme: "off"
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "push"
+      packagesToPush: "$(Build.ArtifactStagingDirectory)/**/*.nupkg"
+      nugetConfigPath: "NuGet.config"

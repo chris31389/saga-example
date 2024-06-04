@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceService", "invoice-service\InvoiceService.csproj", "{D3F56B02-8F5C-4D72-8D79-8091F986697C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaiseInvoices.Worker", "RaiseInvoices\Worker\RaiseInvoices.Worker.csproj", "{D3F56B02-8F5C-4D72-8D79-8091F986697C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "contracts\Contracts.csproj", "{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Shared\Contracts\Contracts.csproj", "{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoices.Api", "Invoices\Api\Invoices.Api.csproj", "{84664D6C-9794-43BD-8060-AE6C06EF3F5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

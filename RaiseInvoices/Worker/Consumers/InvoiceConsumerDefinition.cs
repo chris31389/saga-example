@@ -1,6 +1,6 @@
 using MassTransit;
 
-namespace InvoiceService.Consumers;
+namespace RaiseInvoice.Worker.Consumers;
 
 public class InvoiceConsumerDefinition : ConsumerDefinition<InvoiceConsumer>
 {
