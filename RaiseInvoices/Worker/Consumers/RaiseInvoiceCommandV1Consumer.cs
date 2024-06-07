@@ -1,6 +1,8 @@
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Contracts.RaiseInvoiceCommand.V1;
+using Contracts.RaiseInvoiceCompleted.V1;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -15,10 +17,17 @@ public class RaiseInvoiceCommandV1Consumer : IConsumer<RaiseInvoiceCommandV1>
         _logger = logger;
     }
 
-    public Task Consume(ConsumeContext<RaiseInvoiceCommandV1> context)
+    public async Task Consume(ConsumeContext<RaiseInvoiceCommandV1> context)
     {
         var json = JsonSerializer.Serialize(context.Message);
         _logger.LogInformation("Consuming {Command}: {Json}", nameof(RaiseInvoiceCommandV1), json);
-        return Task.CompletedTask;
+
+        var invoiceId = Guid.NewGuid();
+
+        await context.Publish(new RaiseInvoiceCompletedV1
+        {
+            DebtorId = context.Message.DebtorId,
+            InvoiceId = invoiceId
+        });
     }
 }

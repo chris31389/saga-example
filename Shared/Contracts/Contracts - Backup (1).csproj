@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="RaiseInvoiceCompleted\V1\" />
+    <Folder Include="CreateOrUpdateDebtorCompleted\NewFolder\" />
   </ItemGroup>
 
 </Project>

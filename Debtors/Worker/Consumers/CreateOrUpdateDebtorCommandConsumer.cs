@@ -1,6 +1,8 @@
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Contracts.CreateOrUpdateDebtorCommand.V1;
+using Contracts.CreateOrUpdateDebtorCompleted.V1;
 using Contracts.RaiseInvoiceCommand.V1;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -16,10 +18,15 @@ public class CreateOrUpdateDebtorCommandConsumer : IConsumer<CreateOrUpdateDebto
         _logger = logger;
     }
 
-    public Task Consume(ConsumeContext<CreateOrUpdateDebtorCommandV1> context)
+    public async Task Consume(ConsumeContext<CreateOrUpdateDebtorCommandV1> context)
     {
         var json = JsonSerializer.Serialize(context.Message);
         _logger.LogInformation("Consuming {Command}: {Json}", nameof(RaiseInvoiceCommandV1), json);
-        return Task.CompletedTask;
+        var debtorId = Guid.NewGuid();
+
+        await context.Publish(new CreateOrUpdateDebtorCompletedV1
+        {
+            DebtorId = debtorId
+        });
     }
 }

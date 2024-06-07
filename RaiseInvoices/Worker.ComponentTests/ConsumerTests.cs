@@ -29,7 +29,7 @@ namespace RaiseInvoices.Worker.ComponentTests
                 var bus = provider.GetRequiredService<IBus>();
                 var message = new RaiseInvoiceCommandV1
                 {
-                    DebtorId = Guid.NewGuid().ToString(),
+                    DebtorId = Guid.NewGuid(),
                     Currency = "GBP",
                     Value = 24.99m
                 };
