@@ -1,9 +1,9 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Hosting;
 
-namespace RaiseInvoices.Worker;
+namespace Debtors.Worker;
 
 public class Program
 {
@@ -20,7 +20,7 @@ public class Program
                 // saga repository.
                 x.SetInMemorySagaRepositoryProvider();
 
-                var entryAssembly = Assembly.GetEntryAssembly();
+                var entryAssembly = Assembly.GetEntryAssembly(); 
 
                 x.AddConsumers(entryAssembly);
                 x.AddSagaStateMachines(entryAssembly);

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Invoice.Api.Controllers;
+namespace Invoices.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("invoice")]
 public class InvoiceController(ILogger<InvoiceController> logger) : ControllerBase
 {
     [HttpPost(Name = "StartInvoiceCreation")]
