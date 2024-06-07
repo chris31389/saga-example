@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Debtors.Worker;
@@ -15,19 +16,16 @@ public class Program
             services.AddMassTransit(x =>
             {
                 x.SetKebabCaseEndpointNameFormatter();
-
-                // By default, sagas are in-memory, but should be changed to a durable
-                // saga repository.
-                x.SetInMemorySagaRepositoryProvider();
-
-                var entryAssembly = Assembly.GetEntryAssembly(); 
-
-                x.AddConsumers(entryAssembly);
-                x.AddSagaStateMachines(entryAssembly);
-                x.AddSagas(entryAssembly);
-                x.AddActivities(entryAssembly);
-
-                x.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
+                x.AddConsumers(typeof(Program).Assembly);
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri(hostContext.Configuration.GetConnectionString("RabbitMq")!), hst =>
+                    {
+                        hst.Username("guest");
+                        hst.Password("guest");
+                    });
+                    cfg.ConfigureEndpoints(context);
+                });
             })
         );
 }
