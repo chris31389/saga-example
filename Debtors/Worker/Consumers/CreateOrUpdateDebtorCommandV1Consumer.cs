@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Debtors.Messages.CreateOrUpdateDebtorCommand.V1;
 using Debtors.Messages.CreateOrUpdateDebtorCompleted.V1;
@@ -24,8 +23,9 @@ public class CreateOrUpdateDebtorCommandV1Consumer : IConsumer<CreateOrUpdateDeb
 
         await context.Publish(new CreateOrUpdateDebtorCompletedV1
         {
-            CustomerId = context.Message.CustomerId,
-            DebtorId = debtorId
+            OrderId = context.Message.OrderId,
+            DebtorId = debtorId,
+            DebtorEmail = context.Message.Email,
         });
     }
 }

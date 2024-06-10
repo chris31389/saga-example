@@ -1,7 +1,7 @@
 ﻿using System;
 using Contracts.RaiseInvoiceCommand.V1;
 using Contracts.RaiseInvoiceCompleted.V1;
-using Contracts.SendInvoiceCommandV1.V1;
+using Contracts.SendEmailCommand.V1;
 using Debtors.Messages.CreateOrUpdateDebtorCommand.V1;
 using Debtors.Messages.CreateOrUpdateDebtorCompleted.V1;
 using Invoices.Messages.OrderStartedV1.V1;
@@ -72,10 +72,10 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                     context.Saga.Url = context.Message.Url;
                 })
                 .TransitionTo(SendingInvoice)
-                .Publish(context => new SendInvoiceCommandV1
+                .Publish(context => new SendEmailCommandV1
                 {
-                    Email = context.Saga.DebtorEmail,
-                    Url = context.Saga.Url
+                    EmailAddress = context.Saga.DebtorEmail,
+                    ContentFromUrl = context.Saga.Url
                 })
                 .Finalize());
     }
