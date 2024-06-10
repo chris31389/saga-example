@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Contracts.CreateOrUpdateDebtorCommand.V1;
+using Debtors.Messages.CreateOrUpdateDebtorCommand.V1;
 using Debtors.Worker.Consumers;
 using FluentAssertions;
 using MassTransit;
@@ -17,7 +17,7 @@ namespace Debtors.Worker.ComponentTests
             // Arrange
             await using var provider = new ServiceCollection()
                 .AddMassTransitTestHarness(cfg => cfg
-                    .AddConsumer<CreateOrUpdateDebtorCommandConsumer>())
+                    .AddConsumer<CreateOrUpdateDebtorCommandV1Consumer>())
                 .BuildServiceProvider(true);
 
             var harness = provider.GetRequiredService<ITestHarness>();

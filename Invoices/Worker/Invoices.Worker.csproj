@@ -11,10 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Debtors\Messages\Debtors.Messages.csproj" />
     <ProjectReference Include="..\..\Shared\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Messages\Invoices.Messages.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Sagas\" />
-  </ItemGroup>
 </Project>
