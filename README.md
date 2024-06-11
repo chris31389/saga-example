@@ -26,7 +26,7 @@ https://www.dbvis.com/thetable/how-to-set-up-postgres-using-docker/
 
 ```cmd
 docker pull postgres
-docker run --name postgres_container -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
+docker run --name postgres_container --hostname postgreshost -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
 docker start postgres_container
 ```
 
@@ -46,24 +46,22 @@ docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqh
 #### Invoices.Worker
 
 ```
-docker build -t invoices-worker-image -f Invoices.Worker.Dockerfile .
-docker create --name invoices-worker invoices-worker-image
-docker run -p 8080:8080 invoices-worker -e ConnectionStrings:RabbitMq="amqp://localhost:5672"
+docker build -t invoices-worker -f Invoices.Worker.Dockerfile .
+docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -e ConnectionStrings:Postgres="postgres://postgres:mysecretpassword@postgreshost:5432/postgres" invoices-worker 
 ```
 
 #### Debtors.Worker
 
 ```
-docker build -t debtors-worker-image -f Debtors.Worker.Dockerfile .
-docker create --name debtors-worker debtors-worker-image
+docker build -t debtors-worker -f Debtors.Worker.Dockerfile .
+docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" debtors-worker 
 docker run -p 8080:8080 debtors-worker
 ```
 
 #### Emails.Worker
 
 ```
-docker build -t email-worker-image -f Email.Worker.Dockerfile .
-docker create --name email-worker email-worker-image
-docker run -p 8080:8080 email-worker
+docker build -t emails-worker -f Emails.Worker.Dockerfile .
+docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" emails-worker 
 ```
 
