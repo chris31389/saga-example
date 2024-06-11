@@ -2,8 +2,11 @@
 using System.Threading.Tasks;
 using Invoices.Worker.CreateInvoices;
 using Invoices.Worker.Sagas;
+using Invoices.Worker.Shared.Persistence;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Invoices.Worker;
@@ -16,11 +19,18 @@ public class Program
         .CreateDefaultBuilder(args)
         .ConfigureServices((hostContext, services) => services
             .AddCreateInvoiceFeature()
+            .AddDbContext<InvoiceDbContext>(options =>
+                options.UseNpgsql(hostContext.Configuration.GetConnectionString("Postgres")))
             .AddMassTransit(busConfigurator =>
             {
                 busConfigurator.SetKebabCaseEndpointNameFormatter();
                 busConfigurator.AddConsumers(typeof(Program).Assembly);
-                busConfigurator.AddSagaStateMachine<OrderSaga, OrderSagaData>();
+                busConfigurator.AddSagaStateMachine<OrderSaga, OrderSagaData>()
+                    .EntityFrameworkRepository(efConfigurator =>
+                    {
+                        efConfigurator.ExistingDbContext<InvoiceDbContext>();
+                        efConfigurator.UsePostgres();
+                    });
                 busConfigurator.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(new Uri(hostContext.Configuration.GetConnectionString("RabbitMq")!), hst =>
@@ -28,6 +38,7 @@ public class Program
                         hst.Username("guest");
                         hst.Password("guest");
                     });
+                    cfg.UseInMemoryOutbox(context);
                     cfg.ConfigureEndpoints(context);
                 });
             })
