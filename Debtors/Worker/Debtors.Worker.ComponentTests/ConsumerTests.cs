@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Debtors.Messages.CreateOrUpdateDebtorCommand.V1;
 using Debtors.Worker.Consumers;
@@ -28,7 +29,10 @@ namespace Debtors.Worker.ComponentTests
                 var bus = provider.GetRequiredService<IBus>();
                 var message = new CreateOrUpdateDebtorCommandV1
                 {
-                    Name = "Chris"
+                    Name = "Chris",
+                    CustomerId = Guid.NewGuid().ToString(),
+                    CorrelationId = Guid.NewGuid(),
+                    Email = Guid.NewGuid().ToString()
                 };
 
                 // Act

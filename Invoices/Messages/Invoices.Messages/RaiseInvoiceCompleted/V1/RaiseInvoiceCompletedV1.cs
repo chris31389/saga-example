@@ -2,8 +2,8 @@
 
 public class RaiseInvoiceCompletedV1
 {
-    public Guid DebtorId { get; init; }
-    public Guid InvoiceId { get; set; }
-    public Guid CorrelationId { get; set; }
-    public string Url { get; set; }
+    public required Guid DebtorId { get; init; }
+    public required Guid InvoiceId { get; init; }
+    public required Guid CorrelationId { get; init; }
+    public required string Url { get; init; }
 }

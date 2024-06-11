@@ -2,8 +2,8 @@
 
 public class CreateOrUpdateDebtorCommandV1
 {
-    public string Name { get; set; }
-    public string CustomerId { get; set; }
-    public Guid CorrelationId { get; set; }
-    public string Email { get; set; }
+    public required string Name { get; init; }
+    public required string CustomerId { get; init; }
+    public required Guid CorrelationId { get; init; }
+    public required string Email { get; init; }
 }

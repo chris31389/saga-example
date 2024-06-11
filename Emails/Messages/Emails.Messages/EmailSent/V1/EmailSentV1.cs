@@ -2,6 +2,6 @@
 
 public class EmailSentV1
 {
-    public Guid CorrelationId { get; init; }
-    public Guid EmailId { get; init; }
+    public required Guid CorrelationId { get; init; }
+    public required Guid EmailId { get; init; }
 }

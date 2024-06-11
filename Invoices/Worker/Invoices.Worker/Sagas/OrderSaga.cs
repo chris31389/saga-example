@@ -77,7 +77,8 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                 .Publish(context => new SendEmailCommandV1
                 {
                     EmailAddress = context.Saga.Email,
-                    ContentFromUrl = context.Saga.Url
+                    ContentFromUrl = context.Saga.Url,
+                    CorrelationId = context.Message.CorrelationId
                 }));
 
         During(SendingInvoice,

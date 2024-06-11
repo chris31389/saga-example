@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Emails.Messages.SendEmailCommand.V1;
 using Emails.Worker.Consumers;
@@ -29,7 +30,8 @@ namespace Emails.Worker.ComponentTests
                 var message = new SendEmailCommandV1
                 {
                     ContentFromUrl = "https://hello.com",
-                    EmailAddress = "my@email.com"
+                    EmailAddress = "my@email.com",
+                    CorrelationId = Guid.NewGuid()
                 };
 
                 // Act

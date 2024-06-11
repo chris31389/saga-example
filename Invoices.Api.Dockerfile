@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 WORKDIR /src
 
 COPY . .
-RUN dotnet publish "./Api/Invoices.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Invoices/Api/Invoices.Api/Invoices.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

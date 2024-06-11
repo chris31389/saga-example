@@ -10,9 +10,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 WORKDIR /src
 
 COPY . .
-RUN dotnet publish "./Api/Invoices.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Invoices/Worker/Invoices.Worker/Invoices.Worker.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Invoices.Api.dll"]
+ENTRYPOINT ["dotnet", "Invoices.Worker.dll"]

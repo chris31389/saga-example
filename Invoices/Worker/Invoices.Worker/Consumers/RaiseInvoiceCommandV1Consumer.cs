@@ -23,7 +23,8 @@ public class RaiseInvoiceCommandV1Consumer(
         {
             DebtorId = context.Message.DebtorId,
             CorrelationId = context.Message.CorrelationId,
-            InvoiceId = invoiceId
+            InvoiceId = invoiceId,
+            Url = $"http://something.blob.com/{invoiceId}"
         });
     }
 }

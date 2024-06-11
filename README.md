@@ -22,22 +22,43 @@ https://www.dbvis.com/thetable/how-to-set-up-postgres-using-docker/
 docker pull postgres
 docker run --name postgres_container -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
 docker start postgres_container
-
-docker run --name saga-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
-docker start saga-postgres
 ```
 
 ## Our App
 
 ### Building
 
+#### Invoices.Api
+
 ```
-cd .\InvoiceApi\
-docker build -t invoice-api-image -f Dockerfile .
-docker create --name invoice-api invoice-api-image
-docker run -p 8080:8080 invoice-api
+docker build -t invoices-api-image -f Invoices.Api.Dockerfile .
+docker create --name invoices-api invoices-api-image
+docker run -p 8080:8080 invoices-api
 ```
 
 `POST http://localhost:8080/invoice`
 
+#### Invoices.Worker
+
+```
+docker build -t invoices-worker-image -f Invoices.Worker.Dockerfile .
+docker create --name invoices-worker invoices-worker-image
+docker run -p 8080:8080 invoices-worker
+```
+
+#### Debtors.Worker
+
+```
+docker build -t debtors-worker-image -f Debtors.Worker.Dockerfile .
+docker create --name debtors-worker debtors-worker-image
+docker run -p 8080:8080 debtors-worker
+```
+
+#### Emails.Worker
+
+```
+docker build -t email-worker-image -f Email.Worker.Dockerfile .
+docker create --name email-worker email-worker-image
+docker run -p 8080:8080 email-worker
+```
 

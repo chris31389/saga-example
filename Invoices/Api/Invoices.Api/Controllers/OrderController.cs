@@ -28,12 +28,12 @@ public class OrderController(
         await publishEndpoint.Publish(new OrderCreatedV1
         {
             CorrelationId = correlationContextAccessor.CorrelationContext.CorrelationId,
-            CustomerId = model.CustomerId,
+            CustomerId = model.CustomerId ?? throw new ArgumentNullException(nameof(model.CustomerId)),
             OrderId = orderId,
-            Name = model.Name,
+            Name = model.Name ?? throw new ArgumentNullException(nameof(model.Name)),
             Amount = model.Amount,
-            Currency = model.Currency,
-            Email = model.Email
+            Currency = model.Currency ?? throw new ArgumentNullException(nameof(model.Currency)),
+            Email = model.Email ?? throw new ArgumentNullException(nameof(model.Email))
         });
 
         return Accepted();

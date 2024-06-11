@@ -2,11 +2,11 @@
 
 public class OrderCreatedV1
 {
-    public string Name { get; set; }
-    public string Currency { get; set; }
-    public decimal Amount { get; set; }
-    public string CustomerId { get; set; }
-    public Guid OrderId { get; set; }
-    public string Email { get; set; } 
-    public Guid CorrelationId { get; set; }
+    public required string Name { get; init; }
+    public required string Currency { get; init; }
+    public required decimal Amount { get; init; }
+    public required string CustomerId { get; init; }
+    public required Guid OrderId { get; init; }
+    public required string Email { get; init; } 
+    public required Guid CorrelationId { get; init; }
 }
