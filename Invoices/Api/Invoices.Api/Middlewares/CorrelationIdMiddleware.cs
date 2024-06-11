@@ -28,6 +28,7 @@ public class CorrelationIdMiddleware(RequestDelegate next)
         }
 
         correlationContextAccessor.CorrelationContext = correlationContext;
+        context.Response.Headers[CorrelationKey] = correlationContext.CorrelationId.ToString();
         await next(context);
     }
 }
