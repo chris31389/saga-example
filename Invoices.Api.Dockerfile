@@ -6,11 +6,17 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY . .
+RUN dotnet build "./Invoices/Api/Invoices.Api/Invoices.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 WORKDIR /src
-
 COPY . .
-RUN dotnet publish "./Invoices/Api/Invoices.Api/Invoices.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Invoices/Api/Invoices.Api/Invoices.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

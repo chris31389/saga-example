@@ -2,13 +2,19 @@
 
 ## Dependencies
 
+### Shared Network
+
+```
+docker network create saga_net
+```
+
 ### RabbitMq
 
 [Docker tutorial for RabbitMq](https://www.svix.com/resources/guides/rabbitmq-docker-setup-guide/#step-1-pulling-the-rabbitmq-docker-image)
 
 ```cmd
 docker pull rabbitmq:3-management
-docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+docker run -d --network saga_net --name rabbitmq --hostname rabbitmqhost -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 docker start rabbitmq
 ```
 
@@ -31,9 +37,8 @@ docker start postgres_container
 #### Invoices.Api
 
 ```
-docker build -t invoices-api-image -f Invoices.Api.Dockerfile .
-docker create --name invoices-api invoices-api-image
-docker run -p 8080:8080 invoices-api
+docker build -t invoices-api -f Invoices.Api.Dockerfile .
+docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -p 8080:8080 invoices-api 
 ```
 
 `POST http://localhost:8080/invoice`
@@ -43,7 +48,7 @@ docker run -p 8080:8080 invoices-api
 ```
 docker build -t invoices-worker-image -f Invoices.Worker.Dockerfile .
 docker create --name invoices-worker invoices-worker-image
-docker run -p 8080:8080 invoices-worker
+docker run -p 8080:8080 invoices-worker -e ConnectionStrings:RabbitMq="amqp://localhost:5672"
 ```
 
 #### Debtors.Worker

@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Debtors.Messages", "Debtors
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Messages", "Invoices\Messages\Invoices.Messages\Invoices.Messages.csproj", "{C76809B2-844B-4AE7-B43A-F14E14F9A110}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emails.Messages", "Emails\Messages\Emails.Messages\Emails.Messages.csproj", "{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emails.Messages", "Emails\Messages\Emails.Messages\Emails.Messages.csproj", "{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
