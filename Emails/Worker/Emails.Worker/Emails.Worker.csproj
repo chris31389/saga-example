@@ -11,6 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Messages\Debtors.Messages.csproj" />
+    <ProjectReference Include="..\..\Messages\Emails.Messages\Emails.Messages.csproj" />
   </ItemGroup>
 </Project>

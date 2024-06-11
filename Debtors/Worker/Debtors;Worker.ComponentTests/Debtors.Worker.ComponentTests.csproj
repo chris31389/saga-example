@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Worker\Debtors.Worker.csproj" />
+    <ProjectReference Include="..\..\Worker\Debtors.Worker\Debtors.Worker.csproj" />
   </ItemGroup>
 
 </Project>
