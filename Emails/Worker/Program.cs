@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Invoices.Worker.CreateInvoices;
-using Invoices.Worker.Sagas;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Invoices.Worker;
+namespace Emails.Worker;
 
 public class Program
 {
@@ -14,14 +12,12 @@ public class Program
 
     public static IHostBuilder CreateHostBuilder(string[] args) => Host
         .CreateDefaultBuilder(args)
-        .ConfigureServices((hostContext, services) => services
-            .AddCreateInvoiceFeature()
-            .AddMassTransit(busConfigurator =>
+        .ConfigureServices((hostContext, services) =>
+            services.AddMassTransit(x =>
             {
-                busConfigurator.SetKebabCaseEndpointNameFormatter();
-                busConfigurator.AddConsumers(typeof(Program).Assembly);
-                busConfigurator.AddSagaStateMachine<OrderSaga, OrderSagaData>();
-                busConfigurator.UsingRabbitMq((context, cfg) =>
+                x.SetKebabCaseEndpointNameFormatter();
+                x.AddConsumers(typeof(Program).Assembly);
+                x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(new Uri(hostContext.Configuration.GetConnectionString("RabbitMq")!), hst =>
                     {

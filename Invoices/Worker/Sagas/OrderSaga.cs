@@ -1,10 +1,10 @@
-﻿using System;
-using Contracts.RaiseInvoiceCommand.V1;
-using Contracts.RaiseInvoiceCompleted.V1;
-using Contracts.SendEmailCommand.V1;
-using Debtors.Messages.CreateOrUpdateDebtorCommand.V1;
+﻿using Debtors.Messages.CreateOrUpdateDebtorCommand.V1;
 using Debtors.Messages.CreateOrUpdateDebtorCompleted.V1;
-using Invoices.Messages.OrderStartedV1.V1;
+using Emails.Messages.EmailSent.V1;
+using Emails.Messages.SendEmailCommand.V1;
+using Invoices.Messages.OrderCreated.V1;
+using Invoices.Messages.RaiseInvoiceCommand.V1;
+using Invoices.Messages.RaiseInvoiceCompleted.V1;
 using MassTransit;
 
 namespace Invoices.Worker.Sagas;
@@ -14,36 +14,39 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
     public State CreatingOrUpdatingDebtor { get; set; }
     public State RaisingInvoice { get; set; }
     public State SendingInvoice { get; set; }
-    public Event<OrderStartedV1> OrderStarted { get; set; }
+    public State AwaitingPayment { get; set; }
+    public Event<OrderCreatedV1> OrderCreated { get; set; }
     public Event<CreateOrUpdateDebtorCompletedV1> CreateOrUpdateDebtorCompleted { get; set; }
     public Event<RaiseInvoiceCompletedV1> RaiseInvoiceCompleted { get; set; }
+    public Event<EmailSentV1> EmailSent { get; set; }
 
     public OrderSaga()
     {
         InstanceState(x => x.CurrentState);
 
         // Consider changing the correlation id to a transaction Id so that we can have multiple invoices for a debtor
-        Event(() => OrderStarted, e => e.CorrelateById(m => m.Message.OrderId));
-        Event(() => CreateOrUpdateDebtorCompleted, e => e.CorrelateById(m => m.Message.OrderId));
-        Event(() => RaiseInvoiceCompleted, e => e.CorrelateById(m => m.Message.OrderId));
+        Event(() => OrderCreated, e => e.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => CreateOrUpdateDebtorCompleted, e => e.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => RaiseInvoiceCompleted, e => e.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => EmailSent, e => e.CorrelateById(m => m.Message.CorrelationId));
 
         Initially(
-            When(OrderStarted)
+            When(OrderCreated)
                 .Then(context =>
                 {
-                    context.Saga.DebtorId = null;
-                    context.Saga.CorrelationId = Guid.NewGuid();
+                    context.Saga.OrderId = context.Message.OrderId;
+                    context.Saga.CorrelationId = context.Message.CorrelationId;
                     context.Saga.Name = context.Message.Name;
                     context.Saga.Amount = context.Message.Amount;
                     context.Saga.Currency = context.Message.Currency;
-                    context.Saga.DebtorEmail = context.Message.Email;
+                    context.Saga.Email = context.Message.Email;
                 })
                 .TransitionTo(CreatingOrUpdatingDebtor)
                 .Publish(context => new CreateOrUpdateDebtorCommandV1
                 {
                     CustomerId = context.Message.CustomerId,
                     Name = context.Message.Name,
-                    OrderId = context.Message.OrderId,
+                    CorrelationId = context.Message.OrderId,
                     Email = context.Message.Email,
                 }));
 
@@ -53,13 +56,12 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                 {
                     context.Saga.DebtorCreated = true;
                     context.Saga.DebtorId = context.Message.DebtorId;
-                    context.Saga.DebtorEmail = context.Message.DebtorEmail;
                 })
                 .TransitionTo(RaisingInvoice)
                 .Publish(context => new RaiseInvoiceCommandV1
                 {
-                    OrderId = context.Message.OrderId,
-                    DebtorId = context.Saga.DebtorId!.Value,
+                    CorrelationId = context.Message.CorrelationId,
+                    DebtorId = context.Saga.DebtorId,
                     Currency = context.Saga.Currency,
                     Value = context.Saga.Amount
                 }));
@@ -74,9 +76,17 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                 .TransitionTo(SendingInvoice)
                 .Publish(context => new SendEmailCommandV1
                 {
-                    EmailAddress = context.Saga.DebtorEmail,
+                    EmailAddress = context.Saga.Email,
                     ContentFromUrl = context.Saga.Url
+                }));
+
+        During(SendingInvoice,
+            When(EmailSent)
+            .Then(context =>
+                {
+                    context.Saga.EmailId = context.Message.EmailId;
                 })
+                .TransitionTo(AwaitingPayment)
                 .Finalize());
     }
 }

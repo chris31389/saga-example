@@ -23,7 +23,7 @@ public class CreateOrUpdateDebtorCommandV1Consumer : IConsumer<CreateOrUpdateDeb
 
         await context.Publish(new CreateOrUpdateDebtorCompletedV1
         {
-            OrderId = context.Message.OrderId,
+            CorrelationId = context.Message.CorrelationId,
             DebtorId = debtorId,
             DebtorEmail = context.Message.Email,
         });

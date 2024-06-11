@@ -11,13 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Debtors\Messages\Debtors.Messages.csproj" />
-    <ProjectReference Include="..\..\Emails\Messages\Emails.Messages.csproj" />
-    <ProjectReference Include="..\Messages\Invoices.Messages.csproj" />
+    <ProjectReference Include="..\Messages\Emails.Messages.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CreateInvoices\" />
-  </ItemGroup>
-
 </Project>

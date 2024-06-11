@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Invoices.Messages.OrderStartedV1.V1;
+using Invoices.Api.Correlations;
+using Invoices.Messages.OrderCreated.V1;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ namespace Invoices.Api.Controllers;
 [Route("orders")]
 public class OrderController(
     ILogger<OrderController> logger,
+    ICorrelationContextAccessor correlationContextAccessor,
     IPublishEndpoint publishEndpoint) : ControllerBase
 {
     [HttpPost(Name = "CreateOrder")]
@@ -23,13 +25,15 @@ public class OrderController(
         logger.LogInformation("Order started with identifier {Identifier}", orderId);
         // TODO: Persist an order
 
-        await publishEndpoint.Publish(new OrderStartedV1
+        await publishEndpoint.Publish(new OrderCreatedV1
         {
+            CorrelationId = correlationContextAccessor.CorrelationContext.CorrelationId,
             CustomerId = model.CustomerId,
             OrderId = orderId,
             Name = model.Name,
             Amount = model.Amount,
-            Currency = model.Currency
+            Currency = model.Currency,
+            Email = model.Email
         });
 
         return Accepted();

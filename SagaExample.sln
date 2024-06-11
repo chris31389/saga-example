@@ -3,17 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaiseInvoices.Worker", "RaiseInvoices\Worker\RaiseInvoices.Worker.csproj", "{D3F56B02-8F5C-4D72-8D79-8091F986697C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Shared\Contracts\Contracts.csproj", "{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emails.Worker", "Emails\Worker\Emails.Worker.csproj", "{D3F56B02-8F5C-4D72-8D79-8091F986697C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Api", "Invoices\Api\Invoices.Api.csproj", "{84664D6C-9794-43BD-8060-AE6C06EF3F5C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{7A63F9AE-2303-4982-889D-1F30A7526AA5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Invoices", "Invoices", "{A0E8DBDA-8BEE-403A-A1B6-EA44DA51A631}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RaiseInvoices", "RaiseInvoices", "{37150F70-EF51-4C3B-A860-F34210A8777C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Emails", "Emails", "{37150F70-EF51-4C3B-A860-F34210A8777C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Debtors.Worker", "Debtors\Worker\Debtors.Worker.csproj", "{7CF1C74C-1658-42B8-ABF0-381D3DF5E770}"
 EndProject
@@ -21,13 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debtors", "Debtors", "{CABD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Debtors.Worker.ComponentTests", "Debtors\Worker.ComponentTests\Debtors.Worker.ComponentTests.csproj", "{22C68814-EF40-47A5-821C-4B29347C7C18}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaiseInvoices.Worker.ComponentTests", "RaiseInvoices\Worker.ComponentTests\RaiseInvoices.Worker.ComponentTests.csproj", "{D24EF315-4C32-4C33-B41A-BBC4492282CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emails.Worker.ComponentTests", "Emails\Worker.ComponentTests\Emails.Worker.ComponentTests.csproj", "{D24EF315-4C32-4C33-B41A-BBC4492282CB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Worker", "Invoices\Worker\Invoices.Worker.csproj", "{2FC82E01-1590-4ED7-8241-1F58250EF0C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debtors.Messages", "Debtors\Messages\Debtors.Messages.csproj", "{8800BB87-428E-4A4A-83E5-E2082F7C6AB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Debtors.Messages", "Debtors\Messages\Debtors.Messages.csproj", "{8800BB87-428E-4A4A-83E5-E2082F7C6AB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoices.Messages", "Invoices\Messages\Invoices.Messages.csproj", "{C76809B2-844B-4AE7-B43A-F14E14F9A110}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Messages", "Invoices\Messages\Invoices.Messages.csproj", "{C76809B2-844B-4AE7-B43A-F14E14F9A110}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emails.Messages", "Emails\Messages\Emails.Messages.csproj", "{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{D3F56B02-8F5C-4D72-8D79-8091F986697C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3F56B02-8F5C-4D72-8D79-8091F986697C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3F56B02-8F5C-4D72-8D79-8091F986697C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84664D6C-9794-43BD-8060-AE6C06EF3F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,13 +65,16 @@ Global
 		{C76809B2-844B-4AE7-B43A-F14E14F9A110}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C76809B2-844B-4AE7-B43A-F14E14F9A110}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C76809B2-844B-4AE7-B43A-F14E14F9A110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D3F56B02-8F5C-4D72-8D79-8091F986697C} = {37150F70-EF51-4C3B-A860-F34210A8777C}
-		{F8BBB5C4-AAF0-4645-B88E-0CE0F4AE82AF} = {7A63F9AE-2303-4982-889D-1F30A7526AA5}
 		{84664D6C-9794-43BD-8060-AE6C06EF3F5C} = {A0E8DBDA-8BEE-403A-A1B6-EA44DA51A631}
 		{7CF1C74C-1658-42B8-ABF0-381D3DF5E770} = {CABDF353-6BC9-4F57-8238-55FD9ADF62D8}
 		{22C68814-EF40-47A5-821C-4B29347C7C18} = {CABDF353-6BC9-4F57-8238-55FD9ADF62D8}
@@ -85,6 +82,7 @@ Global
 		{2FC82E01-1590-4ED7-8241-1F58250EF0C5} = {A0E8DBDA-8BEE-403A-A1B6-EA44DA51A631}
 		{8800BB87-428E-4A4A-83E5-E2082F7C6AB8} = {CABDF353-6BC9-4F57-8238-55FD9ADF62D8}
 		{C76809B2-844B-4AE7-B43A-F14E14F9A110} = {A0E8DBDA-8BEE-403A-A1B6-EA44DA51A631}
+		{E3B6516E-6AB6-4D40-B41C-B32BD5BD4F35} = {37150F70-EF51-4C3B-A860-F34210A8777C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5D983B1-FB63-4B3E-A468-F755FCA39C24}
