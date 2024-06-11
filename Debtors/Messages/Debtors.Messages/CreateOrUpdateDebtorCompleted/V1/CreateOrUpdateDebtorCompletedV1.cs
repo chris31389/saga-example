@@ -4,4 +4,5 @@ public class CreateOrUpdateDebtorCompletedV1
 {
     public Guid DebtorId { get; set; }
     public Guid CorrelationId { get; set; }
+    public string Email { get; set; }
 }

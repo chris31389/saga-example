@@ -25,7 +25,7 @@ public class CreateOrUpdateDebtorCommandV1Consumer : IConsumer<CreateOrUpdateDeb
         {
             CorrelationId = context.Message.CorrelationId,
             DebtorId = debtorId,
-            DebtorEmail = context.Message.Email,
+            Email = context.Message.Email
         });
     }
 }
