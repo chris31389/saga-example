@@ -13,7 +13,12 @@ namespace Invoices.Worker;
 
 public class Program
 {
-    public static async Task Main(string[] args) => await CreateHostBuilder(args).Build().RunAsync();
+    public static async Task Main(string[] args)
+    {
+        var app = CreateHostBuilder(args).Build();
+        await MigrateDatabase(app);
+        await app.RunAsync();
+    }
 
     public static IHostBuilder CreateHostBuilder(string[] args) => Host
         .CreateDefaultBuilder(args)
@@ -43,4 +48,11 @@ public class Program
                 });
             })
         );
+
+    private static async Task MigrateDatabase(IHost app)
+    {
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<InvoiceDbContext>();
+        await context.Database.MigrateAsync();
+    }
 }

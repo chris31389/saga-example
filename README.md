@@ -26,8 +26,8 @@ https://www.dbvis.com/thetable/how-to-set-up-postgres-using-docker/
 
 ```cmd
 docker pull postgres
-docker run --name postgres_container --hostname postgreshost -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
-docker start postgres_container
+docker run -d --network saga_net --name postgres --hostname postgreshost -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
+docker start postgres
 ```
 
 ## Our App
