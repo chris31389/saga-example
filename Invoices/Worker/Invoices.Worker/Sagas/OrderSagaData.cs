@@ -3,7 +3,7 @@ using MassTransit;
 
 namespace Invoices.Worker.Sagas;
 
-public class OrderSagaData : SagaStateMachineInstance
+public class OrderSagaData : SagaStateMachineInstance, ISagaVersion
 {
     public Guid CorrelationId { get; set; }
     public string CurrentState { get; set; }
@@ -17,4 +17,5 @@ public class OrderSagaData : SagaStateMachineInstance
     public Guid OrderId { get; set; }
     public string Email { get; set; }
     public Guid? EmailId { get; set; }
+    public int Version { get; set; }
 }

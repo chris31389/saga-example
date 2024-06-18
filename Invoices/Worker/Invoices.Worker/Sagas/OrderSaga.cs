@@ -47,7 +47,7 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                     CustomerId = context.Message.CustomerId,
                     Name = context.Message.Name,
                     CorrelationId = context.Message.OrderId,
-                    Email = context.Message.Email,
+                    Email = context.Message.Email,  
                 }));
 
         During(CreatingOrUpdatingDebtor,

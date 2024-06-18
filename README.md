@@ -18,6 +18,14 @@ docker run -d --network saga_net --name rabbitmq --hostname rabbitmqhost -p 5672
 docker start rabbitmq
 ```
 
+### MongoDb
+
+https://www.geeksforgeeks.org/how-to-run-mongodb-as-a-docker-container/
+
+```cmd
+docker pull mongo:latest
+docker run -d --network saga_net -p 27017:27017 --name=mongo --hostname mongohost -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -e MONGO_INITDB_DATABASE=orders-db mongo:latest
+```
 
 ### PostreSQL
 
@@ -26,9 +34,24 @@ https://www.dbvis.com/thetable/how-to-set-up-postgres-using-docker/
 
 ```cmd
 docker pull postgres
-docker run -d --network saga_net --name postgres --hostname postgreshost -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
+docker run -d --network saga_net --name postgres --hostname postgreshost -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -v postgres_data:/var/lib/postgresql/data postgres
 docker start postgres
 ```
+
+### Cosmos 
+
+https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-develop-emulator?tabs=docker-linux%2Ccsharp&pivots=api-nosql
+
+```
+docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+docker run -d --network saga_net --name cosmos --hostname cosmoshost -p 8081:8081 -p 10250-10255:10250-10255 --interactive --tty mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+```
+
+https://localhost:8081/_explorer/index.html
+
+#### Install the certificate
+
+https://stackoverflow.com/a/77825243/2069306
 
 ## Our App
 
@@ -38,30 +61,43 @@ docker start postgres
 
 ```
 docker build -t invoices-api -f Invoices.Api.Dockerfile .
-docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -p 8080:8080 invoices-api 
+docker run -d --network saga_net --name invoices-api -p 8080:8080 -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" invoices-api 
 ```
 
 `POST http://localhost:8080/invoice`
 
 #### Invoices.Worker
 
+https://www.learnentityframeworkcore.com/migrations#:~:text=Migrations%20are%20enabled%20by%20default,commands%20to%20create%20a%20migration.
+
 ```
+dotnet ef migrations add Initial
+
 docker build -t invoices-worker -f Invoices.Worker.Dockerfile .
-docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -e ConnectionStrings:Postgres="postgres://postgres:mysecretpassword@postgreshost:5432/postgres" invoices-worker 
+docker run -d --network saga_net --name invoices-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -e ConnectionStrings:Cosmos="AccountEndpoint=https://cosmoshost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" invoices-worker 
+
 ```
 
 #### Debtors.Worker
 
 ```
 docker build -t debtors-worker -f Debtors.Worker.Dockerfile .
-docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" debtors-worker 
-docker run -p 8080:8080 debtors-worker
+docker run -d --network saga_net --name debtors-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" debtors-worker 
 ```
 
 #### Emails.Worker
 
 ```
 docker build -t emails-worker -f Emails.Worker.Dockerfile .
-docker run -d --network saga_net -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" emails-worker 
+docker run -d --network saga_net --name emails-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" emails-worker 
 ```
 
+#### Cosmos Certificate
+
+```
+docker cp cosmos:/tmp/cosmos/appdata/.system/profiles/Client/AppData/Local/CosmosDBEmulator/emulator.pem emulatorcert.crt
+
+```
+
+
+update-ca-certificates
