@@ -16,6 +16,7 @@ public class Program
             services.AddMassTransit(x =>
             {
                 x.SetKebabCaseEndpointNameFormatter();
+                x.AddConsumers(typeof(Program).Assembly);
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(new Uri(hostContext.Configuration.GetConnectionString("RabbitMq")!), hst =>
@@ -23,8 +24,6 @@ public class Program
                         hst.Username("guest");
                         hst.Password("guest");
                     });
-
-                    cfg.UseInMemoryOutbox(context);
                     cfg.ConfigureEndpoints(context);
                 });
             })

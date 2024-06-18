@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Threading.Tasks;
 using Invoices.Messages.RaiseInvoiceCommand.V1;
 using Invoices.Messages.RaiseInvoiceCompleted.V1;
@@ -15,10 +14,18 @@ public class RaiseInvoiceCommandV1Consumer(
 {
     public async Task Consume(ConsumeContext<RaiseInvoiceCommandV1> context)
     {
-        var json = JsonSerializer.Serialize(context.Message);
-        logger.LogInformation("Consuming {Command}: {Json}", nameof(RaiseInvoiceCommandV1), json);
+        logger.LogInformation("Consuming {EventName}: {CorrelationId}",
+            nameof(RaiseInvoiceCommandV1),
+            context.Message.CorrelationId);
 
+        // Create Or Update Debtor
         var invoiceId = await createInvoiceService.Create(context.Message.Currency, context.Message.Value);
+
+        await Task.Delay(3000);
+        logger.LogInformation("Publishing {EventName}: {CorrelationId}",
+            nameof(RaiseInvoiceCompletedV1),
+            context.Message.CorrelationId);
+
         await context.Publish(new RaiseInvoiceCompletedV1
         {
             DebtorId = context.Message.DebtorId,
