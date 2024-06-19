@@ -61,6 +61,7 @@ https://stackoverflow.com/a/77825243/2069306
 
 ```
 docker build -t invoices-api -f Invoices.Api.Dockerfile .
+docker rm invoices-api
 docker run -d --network saga_net --name invoices-api -p 8080:8080 -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" invoices-api 
 ```
 
@@ -71,10 +72,9 @@ docker run -d --network saga_net --name invoices-api -p 8080:8080 -e ConnectionS
 https://www.learnentityframeworkcore.com/migrations#:~:text=Migrations%20are%20enabled%20by%20default,commands%20to%20create%20a%20migration.
 
 ```
-dotnet ef migrations add Initial
-
 docker build -t invoices-worker -f Invoices.Worker.Dockerfile .
-docker run -d --network saga_net --name invoices-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -e ConnectionStrings:Cosmos="AccountEndpoint=https://cosmoshost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" invoices-worker 
+docker rm invoices-worker
+docker run -d --network saga_net --name invoices-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -e ConnectionStrings:Mongo="mongodb://admin:password@mongohost:27017/orders-db?authSource=admin" invoices-worker 
 
 ```
 
@@ -82,6 +82,7 @@ docker run -d --network saga_net --name invoices-worker -e ConnectionStrings:Rab
 
 ```
 docker build -t debtors-worker -f Debtors.Worker.Dockerfile .
+docker rm debtors-worker
 docker run -d --network saga_net --name debtors-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" debtors-worker 
 ```
 
@@ -89,15 +90,6 @@ docker run -d --network saga_net --name debtors-worker -e ConnectionStrings:Rabb
 
 ```
 docker build -t emails-worker -f Emails.Worker.Dockerfile .
+docker rm emails-worker
 docker run -d --network saga_net --name emails-worker -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" emails-worker 
 ```
-
-#### Cosmos Certificate
-
-```
-docker cp cosmos:/tmp/cosmos/appdata/.system/profiles/Client/AppData/Local/CosmosDBEmulator/emulator.pem emulatorcert.crt
-
-```
-
-
-update-ca-certificates

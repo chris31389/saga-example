@@ -38,7 +38,7 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
         InstanceState(x => x.CurrentState);
 
         // Consider changing the correlation id to a transaction Id so that we can have multiple invoices for a debtor
-        Event(() => OrderCreated, e => e.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => OrderCreated, e => e.CorrelateById(m => m.Message.OrderId));
         Event(() => CreateOrUpdateDebtorCompleted, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => RaiseInvoiceCompleted, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => EmailSent, e => e.CorrelateById(m => m.Message.CorrelationId));
@@ -47,9 +47,9 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
             When(OrderCreated)
                 .Then(context =>
                 {
-                    OnThen(context, context.Message.CorrelationId);
+                    OnThen(context, context.Message.OrderId);
                     context.Saga.OrderId = context.Message.OrderId;
-                    context.Saga.CorrelationId = context.Message.CorrelationId;
+                    context.Saga.CorrelationId = context.Message.OrderId;
                     context.Saga.Name = context.Message.Name;
                     context.Saga.Amount = context.Message.Amount;
                     context.Saga.Currency = context.Message.Currency;
@@ -58,12 +58,12 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                 .TransitionTo(CreatingOrUpdatingDebtor)
                 .Publish(context =>
                 {
-                    OnPublish(nameof(CreateOrUpdateDebtorCommandV1), context.Message.CorrelationId);
+                    OnPublish(nameof(CreateOrUpdateDebtorCommandV1), context.Saga.CorrelationId);
                     return new CreateOrUpdateDebtorCommandV1
                     {
                         CustomerId = context.Message.CustomerId,
-                        Name = context.Message.Name,
-                        CorrelationId = context.Message.CorrelationId,
+                        Name = context.Saga.Name,
+                        CorrelationId = context.Saga.CorrelationId,
                         Email = context.Message.Email,
                     };
                 }));
@@ -79,10 +79,10 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                 .TransitionTo(RaisingInvoice)
                 .Publish(context =>
                 {
-                    OnPublish(nameof(RaiseInvoiceCommandV1), context.Message.CorrelationId);
+                    OnPublish(nameof(RaiseInvoiceCommandV1), context.Saga.CorrelationId);
                     return new RaiseInvoiceCommandV1
                     {
-                        CorrelationId = context.Message.CorrelationId,
+                        CorrelationId = context.Saga.CorrelationId,
                         DebtorId = context.Saga.DebtorId,
                         Currency = context.Saga.Currency,
                         Value = context.Saga.Amount
@@ -100,12 +100,12 @@ public class OrderSaga : MassTransitStateMachine<OrderSagaData>
                 .TransitionTo(SendingInvoice)
                 .Publish(context =>
                 {
-                    OnPublish(nameof(SendEmailCommandV1), context.Message.CorrelationId);
+                    OnPublish(nameof(SendEmailCommandV1), context.Saga.CorrelationId);
                     return new SendEmailCommandV1
                     {
                         EmailAddress = context.Saga.Email,
                         ContentFromUrl = context.Saga.Url,
-                        CorrelationId = context.Message.CorrelationId
+                        CorrelationId = context.Saga.CorrelationId,
                     };
                 }));
 

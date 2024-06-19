@@ -36,6 +36,15 @@ public class OrderController(
             Email = model.Email ?? throw new ArgumentNullException(nameof(model.Email))
         });
 
-        return Accepted();
+        var getUrl = Url.Action("State", new { orderId = orderId });
+        return Accepted(getUrl);
+    }
+
+    [HttpGet("{orderId}/state", Name = "OrderState")]
+    public async Task<IActionResult> State(Guid orderId)
+    {
+        logger.LogInformation("Retrieving State for order {OrderId}", orderId);
+        await Task.Delay(1);
+        return Ok();
     }
 }
