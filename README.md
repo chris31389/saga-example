@@ -62,7 +62,7 @@ https://stackoverflow.com/a/77825243/2069306
 ```
 docker build -t invoices-api -f Invoices.Api.Dockerfile .
 docker rm invoices-api
-docker run -d --network saga_net --name invoices-api -p 8080:8080 -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" invoices-api 
+docker run -d --network saga_net --name invoices-api -p 8080:8080 -e ConnectionStrings:RabbitMq="amqp://rabbitmqhost:5672" -e ConnectionStrings:Mongo="mongodb://admin:password@mongohost:27017/orders-db?authSource=admin" invoices-api 
 ```
 
 `POST http://localhost:8080/invoice`
