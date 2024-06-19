@@ -6,6 +6,7 @@ using Emails.Messages.SendEmailCommand.V1;
 using Invoices.Messages.OrderCreated.V1;
 using Invoices.Messages.RaiseInvoiceCommand.V1;
 using Invoices.Messages.RaiseInvoiceCompleted.V1;
+using Invoices.Persistence;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 

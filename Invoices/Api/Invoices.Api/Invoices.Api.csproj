@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Messages\Invoices.Messages\Invoices.Messages.csproj" />
+    <ProjectReference Include="..\..\Persistence\Invoices.Persistence\Invoices.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

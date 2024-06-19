@@ -1,6 +1,7 @@
 using System;
 using Invoices.Api.Correlations;
 using Invoices.Api.Middlewares;
+using Invoices.Persistence;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCorrelation();
+builder.Services.AddInvoicesPersistence();
 builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
