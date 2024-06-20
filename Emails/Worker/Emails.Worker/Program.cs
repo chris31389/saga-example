@@ -1,31 +1,21 @@
 using System;
-using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Emails.Worker;
-
-public class Program
+var builder = Host.CreateApplicationBuilder(args);
+builder.Services.Configure<MassTransitHostOptions>(options => { options.WaitUntilStarted = true; });
+builder.Services.AddMassTransit(x =>
 {
-    public static async Task Main(string[] args) => await CreateHostBuilder(args).Build().RunAsync();
+    x.SetKebabCaseEndpointNameFormatter();
+    x.AddConsumers(typeof(Program).Assembly);
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(new Uri(builder.Configuration.GetConnectionString("RabbitMq")!));
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
-    public static IHostBuilder CreateHostBuilder(string[] args) => Host
-        .CreateDefaultBuilder(args)
-        .ConfigureServices((hostContext, services) =>
-            services.AddMassTransit(x =>
-            {
-                x.SetKebabCaseEndpointNameFormatter();
-                x.AddConsumers(typeof(Program).Assembly);
-                x.UsingRabbitMq((context, cfg) =>
-                {
-                    cfg.Host(new Uri(hostContext.Configuration.GetConnectionString("RabbitMq")!), hst =>
-                    {
-                        hst.Username("guest");
-                        hst.Password("guest");
-                    });
-                    cfg.ConfigureEndpoints(context);
-                });
-            })
-        );
-}
+var host = builder.Build();
+await host.RunAsync();

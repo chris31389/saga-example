@@ -11,7 +11,7 @@ using MongoDB.Driver;
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services
     .AddCreateInvoiceFeature()
-    .AddInvoicesPersistence()
+    .AddInvoicesPersistence("MongoDb")
     .AddMassTransit(busConfigurator =>
     {
         busConfigurator.SetKebabCaseEndpointNameFormatter();
@@ -25,11 +25,7 @@ builder.Services
             });
         busConfigurator.UsingRabbitMq((context, cfg) =>
         {
-            cfg.Host(new Uri(builder.Configuration.GetConnectionString("RabbitMq")!), hst =>
-            {
-                hst.Username("guest");
-                hst.Password("guest");
-            });
+            cfg.Host(new Uri(builder.Configuration.GetConnectionString("RabbitMq")!));
             cfg.UseInMemoryOutbox(context);
             cfg.ConfigureEndpoints(context);
         });

@@ -1,8 +1,8 @@
 ﻿{
   "profiles": {
-    "invoice_service": {
+    "service": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
+      "dotnetRunMessages": true,
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }

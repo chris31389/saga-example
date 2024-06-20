@@ -16,17 +16,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCorrelation();
-builder.Services.AddInvoicesPersistence();
+builder.Services.AddInvoicesPersistence("MongoDb");
+builder.Services.Configure<MassTransitHostOptions>(options => { options.WaitUntilStarted = true; });
 builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
     busConfigurator.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(new Uri(builder.Configuration.GetConnectionString("RabbitMq")!), hst =>
-        {
-            hst.Username("guest");
-            hst.Password("guest");
-        });
+        cfg.Host(new Uri(builder.Configuration.GetConnectionString("RabbitMq")!));
         cfg.ConfigureEndpoints(context);
     });
 });
