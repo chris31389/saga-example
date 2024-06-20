@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.Services.Configure<MassTransitHostOptions>(options => { options.WaitUntilStarted = true; });
 builder.Services
     .AddCreateInvoiceFeature()
     .AddInvoicesPersistence("MongoDb")
