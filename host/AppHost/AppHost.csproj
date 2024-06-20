@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>8f12554c-3b0f-4cc4-901b-46cb30f12443</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.MongoDB" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Debtors\Worker\Debtors.Worker\Debtors.Worker.csproj" />
+    <ProjectReference Include="..\..\Emails\Worker\Emails.Worker\Emails.Worker.csproj" />
+    <ProjectReference Include="..\..\Invoices\Api\Invoices.Api\Invoices.Api.csproj" />
+    <ProjectReference Include="..\..\Invoices\Worker\Invoices.Worker\Invoices.Worker.csproj" />
+  </ItemGroup>
+
+</Project>
